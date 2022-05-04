@@ -1,66 +1,76 @@
 import { CloseButton } from "../CloseButton";
-import bugImageUrl from "../../assets/bug.svg"
-import ideaImageUrl from "../../assets/idea.svg"
-import thoughtImageUrl from "../../assets/thought.svg"
+import bugImageUrl from "../../assets/bug.svg";
+import ideaImageUrl from "../../assets/idea.svg";
+import thoughtImageUrl from "../../assets/thought.svg";
 import { useState } from "react";
 import { FeedbackTypeStep } from "./steps/FeedbackTypeStep";
 import { FeedbackContentStep } from "./steps/FeedbackContentStep";
-
+import { FeedbackSucessStep } from "./steps/FeedbackSucessStep";
 
 export const feedbackTypes = {
-    BUG: {
-        title: 'Problema',
-        image:{
-            source: bugImageUrl,
-            alt: 'Imagem de um inseto representando o bug',
-        }
+  BUG: {
+    title: "Problema",
+    image: {
+      source: bugImageUrl,
+      alt: "Imagem de um inseto representando o bug",
     },
+  },
 
-    IDEA:{
-        title: 'Ideia',
-        image:{
-            source: ideaImageUrl,
-            alt: 'Imagem de uma lâmpada',
-        }
+  IDEA: {
+    title: "Ideia",
+    image: {
+      source: ideaImageUrl,
+      alt: "Imagem de uma lâmpada",
     },
+  },
 
-    OTHER:{
-        title: 'Outro',
-        image:{
-            source: thoughtImageUrl,
-            alt: 'Imagem de um a nuvem de pensamento',
-        }
+  OTHER: {
+    title: "Outro",
+    image: {
+      source: thoughtImageUrl,
+      alt: "Imagem de um a nuvem de pensamento",
     },
-}
+  },
+};
 
-export type FeedbackType = keyof typeof feedbackTypes
+export type FeedbackType = keyof typeof feedbackTypes;
 
+export function WidgetForm() {
+  const [feedbackType, setFeedbackType] = useState<FeedbackType | null>(null);
+  const [feedbackSent, setFeedbackSent] = useState(false);
 
-export function WidgetForm(){
+  function handleRestartFeedback() {
+    setFeedbackSent(false)
+    setFeedbackType(null);
+  }
 
-    const [feedbackType, setFeedbackType] = useState<FeedbackType | null>(null)
-
-    function handleRestartFeedback(){
-        setFeedbackType(null)
-    }
-
-    return(
-        <div className="bg-zinc-900 p-4 relative rounded-2xl 
-                        mb-4 flex flex-col shadow-lg w-[calc(100vw-2rem)] md:w-auto">
-            
-            
+  return (
+    <div
+      className="bg-zinc-900 p-4 relative rounded-2xl 
+                        mb-4 flex flex-col shadow-lg w-[calc(100vw-2rem)] md:w-auto"
+    >
+      {feedbackSent ? (
+        <FeedbackSucessStep onFeedbackRestartRequested = {handleRestartFeedback}/>
+      ) : (
+        <>
           {!feedbackType ? (
-              <FeedbackTypeStep onFeedbackTypeChanged = {setFeedbackType}/>
+            <FeedbackTypeStep onFeedbackTypeChanged={setFeedbackType} />
           ) : (
-              <FeedbackContentStep 
-                feedbackType = {feedbackType}
-                onFeedbackRestartRequested = {handleRestartFeedback}
-              />
+            <FeedbackContentStep
+              feedbackType={feedbackType}
+              onFeedbackRestartRequested={handleRestartFeedback}
+              onFeedbackSent={() => setFeedbackSent(true)}
+            />
           )}
-
-            <footer className="text-xs text-neutral-400">
-            Feito com ♥ pela Rocketseat <a className="underline underline-offset-2" href="https://www.rocketseat.com.br/"></a>
-            </footer>
-        </div>
-    )
+        </>
+      )}
+      <footer className="text-xs text-neutral-400">
+        Figet feito durante a NLW RETURN{" "}
+        <a
+          className="underline underline-offset-2"
+          href="https://www.rocketseat.com.br/"
+        ></a>
+      </footer>
+    </div>
+  );
 }
